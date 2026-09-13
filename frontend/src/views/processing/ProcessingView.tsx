@@ -1,0 +1,15 @@
+import { useEffect, useState } from "react";
+import { Check, CircleDashed, LoaderCircle, Sparkles } from "lucide-react";
+import type { ProcessingStep } from "@/types";
+
+const labels = ["Uploading footage", "Extracting frames", "Detecting road boundaries", "Analyzing road condition", "Generating measurements"];
+
+interface ProcessingViewProps { onComplete: () => void; }
+
+export function ProcessingView({ onComplete }: ProcessingViewProps) {
+  const [active, setActive] = useState(0);
+  const steps: ProcessingStep[] = labels.map((label, index) => ({ label, status: index < active ? "complete" : index === active ? "active" : "pending" }));
+  useEffect(() => { const timer = window.setInterval(() => setActive((current) => current + 1), 850); return () => window.clearInterval(timer); }, []);
+  useEffect(() => { if (active >= labels.length) onComplete(); }, [active, onComplete]);
+  return <main data-testid="processing-screen" className="processing-shell flex min-h-svh items-center justify-center px-5 text-white"><div className="processing-grid" /><section className="relative z-10 w-full max-w-xl"><div className="mb-12 flex items-center gap-3"><span className="brand-mark">R</span><span className="text-[13px] font-semibold tracking-[0.24em]">ROADREAD</span><span className="ml-auto flex items-center gap-2 text-[10px] uppercase tracking-[0.16em] text-[#b8e986]"><span className="live-dot" /> Processing</span></div><div className="mb-16"><div className="mb-6 flex h-20 w-20 items-center justify-center rounded-[28px] border border-[#b8e986]/25 bg-[#b8e986]/[0.07] text-[#b8e986]"><Sparkles size={31} strokeWidth={1.4} /></div><h1 data-testid="processing-heading" className="text-5xl font-semibold leading-[0.94] tracking-[-0.06em] sm:text-7xl">Preparing<br /><span className="text-white/35">RoadRead analysis</span></h1><p className="mt-6 text-sm text-white/45">Your road footage is being translated into a living condition model.</p></div><div data-testid="processing-steps" className="space-y-1">{steps.map((step) => <div key={step.label} className={`processing-row ${step.status === "active" ? "processing-row-active" : ""}`}><span className="flex h-7 w-7 items-center justify-center">{step.status === "complete" ? <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#b8e986] text-[#10201b]"><Check size={12} strokeWidth={3} /></span> : step.status === "active" ? <LoaderCircle size={17} className="animate-spin text-[#b8e986]" /> : <CircleDashed size={16} className="text-white/20" />}</span><span className={step.status === "pending" ? "text-white/30" : "text-white/85"}>{step.label}</span><span className="ml-auto text-[10px] uppercase tracking-[0.15em] text-white/30">{step.status === "complete" ? "Done" : step.status === "active" ? "Now" : "Queued"}</span></div>)}</div><div className="mt-8 h-1 overflow-hidden rounded-full bg-white/10"><div data-testid="processing-progress-bar" className="h-full rounded-full bg-[#b8e986] transition-all duration-700" style={{ width: `${Math.min(100, active / labels.length * 100)}%` }} /></div></section></main>;
+}

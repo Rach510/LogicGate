@@ -1,0 +1,68 @@
+{
+  "passed": 8,
+  "failed": 0,
+  "bugs": [],
+  "action_items": [
+    "Backend API probe returned HTTP 404 for /api/health; all product flows are documented FRONTEND-ONLY MOCK SERVICES and no backend API lane was applicable.",
+    "Google Maps/Street View remain MOCKED in demo fallback mode because VITE_GOOGLE_MAPS_API_KEY is not configured."
+  ],
+  "retest_needed": false,
+  "checks": [
+    {
+      "criterion": "Authentication and onboarding",
+      "name": "authentication-onboarding",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Submitted valid local-demo credentials; auth screen transitioned to onboarding and seeded Udupi project button was visible."
+    },
+    {
+      "criterion": "Project selection",
+      "name": "project-selection",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Selected seeded Udupi project; dashboard rendered with project heading containing Udupi."
+    },
+    {
+      "criterion": "Upload workflow",
+      "name": "upload-workflow",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Selected in-memory road-survey.mp4 through file input; metadata rendered and Continue reached location screen."
+    },
+    {
+      "criterion": "Location fallback",
+      "name": "location-fallback",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Maps demo-mode notice rendered; searching Udupi produced a location result card and fallback messaging."
+    },
+    {
+      "criterion": "Processing to dashboard",
+      "name": "processing-dashboard",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Start analysis rendered processing screen and five-step container, then automatically transitioned to dashboard within 20 seconds."
+    },
+    {
+      "criterion": "Dashboard video environment",
+      "name": "dashboard-video-environment",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Dashboard video analysis player, confidence panel, ₹18.4L budget panel, and Report issue action were visible."
+    },
+    {
+      "criterion": "Navigation and analysis screens",
+      "name": "navigation-analysis-screens",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Floating navigation opened and reached Video analysis, Analytics, Budgets, and Settings screens."
+    },
+    {
+      "criterion": "Issue report flow",
+      "name": "issue-report-flow",
+      "lane": "browser",
+      "status": "passed",
+      "evidence": "Opened issue modal, entered description, attached optional issue.jpg, submitted, observed processing state and success state."
+    }
+  ]
+}
