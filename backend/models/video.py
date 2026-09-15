@@ -1,9 +1,8 @@
 from typing import List, Literal
-
 from pydantic import BaseModel
 
 Severity = Literal["low", "medium", "high"]
-
+MediaType = Literal["image", "video"]
 
 class MeasurementOverlay(BaseModel):
     roadWidth: float
@@ -13,7 +12,6 @@ class MeasurementOverlay(BaseModel):
     quality: float
     frame: int
 
-
 class BoundingBox(BaseModel):
     x: float
     y: float
@@ -21,17 +19,21 @@ class BoundingBox(BaseModel):
     height: float
     label: str
     severity: Severity
-
+    confidence: float = 0.0
 
 class DetectionPoint(BaseModel):
     x: float
     y: float
     label: str
 
+class RoadBoundary(BaseModel):
+    leftTopX: float
+    leftBottomX: float
+    rightTopX: float
+    rightBottomX: float
+    confidence: float = 0.0
 
 class VideoOverlayMetadata(BaseModel):
-    """Mirrors frontend/src/types/index.ts VideoOverlayMetadata."""
-
     duration: str
     fps: int
     resolution: str
@@ -39,3 +41,6 @@ class VideoOverlayMetadata(BaseModel):
     activeMeasurements: MeasurementOverlay
     boxes: List[BoundingBox]
     points: List[DetectionPoint]
+    mediaType: MediaType = "video"
+    mediaUrl: str | None = None
+    roadBoundary: RoadBoundary | None = None

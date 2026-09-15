@@ -61,9 +61,11 @@ DEFAULT_VIDEO = {
     "analyzedFrames": 15120,
     "activeMeasurements": {"roadWidth": 6.84, "leftLane": 3.42, "kerbToKerb": 7.02, "confidence": 94.2, "quality": 91, "frame": 12481},
     "boxes": [
-        {"x": 61, "y": 54, "width": 11, "height": 10, "label": "Surface crack", "severity": "medium"},
-        {"x": 76, "y": 63, "width": 8, "height": 7, "label": "Pothole", "severity": "high"},
+        {"x": 61, "y": 54, "width": 11, "height": 10, "label": "Surface crack", "severity": "medium", "confidence": 82.0},
+        {"x": 76, "y": 63, "width": 8, "height": 7, "label": "Pothole", "severity": "high", "confidence": 87.0},
     ],
+    "mediaType": "video",
+    "mediaUrl": None,
     "points": [
         {"x": 39, "y": 63, "label": "Kerb"},
         {"x": 58, "y": 61, "label": "Lane edge"},
@@ -96,14 +98,13 @@ DEFAULT_ANALYTICS = {
 
 DEFAULT_BUDGET = {
     "total": "₹18.4L",
-    "totalValue": 18.4,
+    "totalValue": 1840000.0,
     "change": "+6.8% vs last estimate",
     "materials": [
-        {"name": "Asphalt", "amount": "₹7.8L", "value": 7.8, "color": "#d5a46b"},
-        {"name": "Concrete", "amount": "₹3.4L", "value": 3.4, "color": "#91a4b6"},
-        {"name": "Aggregate", "amount": "₹2.1L", "value": 2.1, "color": "#d7c3a8"},
-        {"name": "Labour", "amount": "₹3.8L", "value": 3.8, "color": "#92c6ae"},
-        {"name": "Equipment", "amount": "₹1.3L", "value": 1.3, "color": "#8b9de0"},
+        {"name": "Patching", "amount": "₹4.2L", "value": 420000, "color": "#edb06c"},
+        {"name": "Resurfacing", "amount": "₹7.8L", "value": 780000, "color": "#b8e986"},
+        {"name": "Preventive", "amount": "₹2.1L", "value": 210000, "color": "#91a4b6"},
+        {"name": "Maintenance", "amount": "₹4.3L", "value": 430000, "color": "#8b9de0"},
     ],
     "lenders": [
         {"name": "NABARD Infrastructure", "subtitle": "Rural road improvement", "rate": "7.2% p.a.", "term": "Up to 10 years", "highlight": True},
@@ -115,9 +116,25 @@ DEFAULT_BUDGET = {
 
 async def seed_if_empty() -> None:
     try:
-        if await db.projects.count_documents({}) > 0:
-            return
-        await db.projects.insert_many(SEED_PROJECTS)
-        logger.info("seed_if_empty: inserted %d demo projects", len(SEED_PROJECTS))
+        if await db.projects.count_documents({}) == 0:
+            await db.projects.insert_many(SEED_PROJECTS)
+            logger.info("seed_if_empty: inserted %d demo projects", len(SEED_PROJECTS))
+
+        # Seed video_analysis for demo projects if missing
+        if await db.video_analysis.count_documents({"project_id": UDUPI_ID}) == 0:
+            await db.video_analysis.update_one(
+                {"project_id": UDUPI_ID},
+                {"$set": {
+                    "project_id": UDUPI_ID,
+                    "result": DEFAULT_VIDEO,
+                    "estimatedDistanceKm": 18.4,
+                    "detectionConfidence": 87.0,
+                    "maxDetectionConfidence": 87.0,
+                    "boundaryConfidence": 94.2,
+                    "widthStability": 94.2,
+                }},
+                upsert=True
+            )
+            logger.info("seed_if_empty: seeded video_analysis for %s", UDUPI_ID)
     except Exception:  # never block boot on seeding
         logger.exception("seed_if_empty failed")

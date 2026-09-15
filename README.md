@@ -193,3 +193,9 @@ local-run instructions above.
   Vite HMR for the frontend); no rebuild step needed for normal iteration. A
   restart is still needed after changing `.env`, `requirements.txt`, or
   `vite.config.ts`.
+
+## RoadRead analysis setup
+
+The backend uses a road-damage-specific YOLOv8s checkpoint trained on the RDD2022 taxonomy (longitudinal crack, transverse crack, alligator/fatigue crack, pothole). On the first analysis it downloads the checkpoint from the configured public source. Run `python download_model.py` once while online to cache it before the demo. For an offline machine, set `ROAD_DAMAGE_MODEL_PATH` in `.env` to a local `.pt` checkpoint.
+
+Road geometry is computed separately with perspective-aware computer vision. Without a calibrated reference width, the metric is a lower-confidence estimate; supplying `reference_width_m` gives a calibrated result.

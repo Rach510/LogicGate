@@ -1,0 +1,9 @@
+RoadRead road-damage model
+Model: YOLOv8s, fine-tuned on RDD2022 road-damage data
+Classes: D00 Longitudinal Crack; D10 Transverse Crack; D20 Alligator Crack; D40 Pothole
+Checkpoint path: backend/models/road_damage/yolov8s_rdd2022.pt
+Source: https://huggingface.co/SreekarAditya/yolo-rdd2022-benchmark
+
+For offline deployment, run:
+    python download_model.py
+or set ROAD_DAMAGE_MODEL_PATH in backend/.env to a local .pt checkpoint.

@@ -6,15 +6,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { issuesApi } from "@/api/issues";
 import type { RoadLocation } from "@/types";
 
-interface IssueModalProps { open: boolean; onClose: () => void; }
+interface IssueModalProps { open: boolean; onClose: () => void; projectId?: string; location?: RoadLocation; }
 
-export function IssueModal({ open, onClose }: IssueModalProps) {
+export function IssueModal({ open, onClose, projectId, location }: IssueModalProps) {
   const [category, setCategory] = useState("Surface damage");
   const [description, setDescription] = useState("");
   const [attachmentName, setAttachmentName] = useState("");
-  const [location] = useState<RoadLocation | undefined>(undefined);
   const [stage, setStage] = useState<"form" | "processing" | "success">("form");
-  const submit = async () => { setStage("processing"); await issuesApi.submit({ description, category, attachmentName, location }); window.setTimeout(() => setStage("success"), 700); };
+  const submit = async () => { setStage("processing"); await issuesApi.submit({ description, category, attachmentName, location, project_id: projectId }); window.setTimeout(() => setStage("success"), 700); };
   const close = () => { setStage("form"); setDescription(""); setAttachmentName(""); onClose(); };
   return <AnimatePresence>{open && <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} data-testid="issue-modal" className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 p-3 backdrop-blur-sm sm:items-center sm:p-6"><motion.div initial={{ opacity: 0, y: 28, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 20, scale: 0.98 }} transition={{ type: "spring", stiffness: 360, damping: 30 }} className="w-full max-w-lg overflow-hidden rounded-[28px] border border-white/15 bg-[#17211f]/95 shadow-2xl backdrop-blur-2xl">
     <div className="flex items-start justify-between border-b border-white/10 px-5 py-5 sm:px-6"><div><div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#edb06c]"><AlertTriangle size={13} /> Quality loop</div><h2 data-testid="issue-modal-title" className="mt-2 text-xl font-semibold tracking-tight text-white">Report an issue</h2><p className="mt-1 text-xs text-white/45">Help us keep the road model honest.</p></div><button type="button" data-testid="issue-modal-close-button" aria-label="Close report issue" onClick={close} className="text-white/45 transition-colors hover:text-white"><X size={18} /></button></div>

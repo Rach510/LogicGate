@@ -23,6 +23,7 @@ from routers.analytics import router as analytics_router
 from routers.budgets import router as budgets_router
 from routers.issues import router as issues_router
 from routers.projects import router as projects_router
+from routers.reports import router as reports_router
 from routers.video import router as video_router
 
 
@@ -78,6 +79,7 @@ api_router.include_router(analytics_router)
 api_router.include_router(budgets_router)
 api_router.include_router(video_router)
 api_router.include_router(issues_router)
+api_router.include_router(reports_router)
 
 app.add_middleware(
     CORSMiddleware,

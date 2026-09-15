@@ -45,12 +45,21 @@ export interface BoundingBox {
   height: number;
   label: string;
   severity: "low" | "medium" | "high";
+  confidence: number;
 }
 
 export interface DetectionPoint {
   x: number;
   y: number;
   label: string;
+}
+
+export interface RoadBoundary {
+  leftTopX: number;
+  leftBottomX: number;
+  rightTopX: number;
+  rightBottomX: number;
+  confidence: number;
 }
 
 export interface VideoOverlayMetadata {
@@ -61,6 +70,9 @@ export interface VideoOverlayMetadata {
   activeMeasurements: MeasurementOverlay;
   boxes: BoundingBox[];
   points: DetectionPoint[];
+  mediaType: "image" | "video";
+  mediaUrl?: string | null;
+  roadBoundary?: RoadBoundary | null;
 }
 
 export interface AnalyticsData {
@@ -110,6 +122,7 @@ export interface IssueReport {
   category: string;
   location?: RoadLocation;
   attachmentName?: string;
+  project_id?: string;
 }
 
 export type ProcessingStep = {
