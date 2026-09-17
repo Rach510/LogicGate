@@ -1,0 +1,5 @@
+MONGO_URL=mongodb+srv://Shashwat:Shashwat123@cluster0.jxnep7n.mongodb.net/?appName=Cluster0
+tlsAllowInvalidCertificates=true
+DB_NAME=roadread
+CORS_ORIGINS=http://localhost:3000
+EMERGENT_LLM_KEY=
